@@ -63,7 +63,7 @@ const Page = () => {
             </Link>
           </div>
           <div>
-            <Link href={"./graduates_main/graduate_sayan"} className="mb-4">
+            <Link href={"/graduates_main/graduate_sayan/routess/page"} className="mb-4">
               <div className="text-4xl bg-transparent font-extralight border text-center border-white rounded-lg p-8 hover:bg-gradient-to-l from-[#0d617b] to-[#12a9be] hover:text-slate-200 hover:animate-none">
                 Sayán
               </div>

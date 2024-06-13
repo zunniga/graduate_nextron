@@ -218,7 +218,7 @@ export default function Home() {
                       key={index}
                       className={`join-item btn ${
                         index === currentImageIndex
-                          ? "bg-amber-400 text-white"
+                          ? "bg-[#db2777] text-white"
                           : ""
                       }`}
                       onClick={() => setCurrentImageIndex(index)}

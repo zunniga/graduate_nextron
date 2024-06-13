@@ -3,8 +3,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import jsPDF from "jspdf";
 import Confetti from "react-confetti";
-import { NewDataSayan } from "@/components/Sayan/ImageSayanDB";
-import ParticipanteName from "@/components/Sayan/GraduateGeneratorS";
+import { NewDataSayan } from "../../../../../components/graduates/Sayan/ImageSayanDB";
 import { GrLinkNext } from "react-icons/gr";
 import { GrLinkPrevious } from "react-icons/gr";
 import { RiFileExcel2Fill } from "react-icons/ri";
@@ -13,6 +12,7 @@ import { LuCheckCircle } from "react-icons/lu";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { BsXCircleFill } from "react-icons/bs";
 import * as XLSX from "xlsx";
+import fs from "fs";
 
 const imageDB = new NewDataSayan();
 
@@ -64,123 +64,107 @@ const CertificatesTable: React.FC<{
 
 export default function Home() {
   const [mostrarConfetti, setMostrarConfetti] = useState(false);
-
-  const [digitalCertificates, setDigitalCertificates] =
-    useState<CertificatesList>([]);
-  const [physicalCertificates, setPhysicalCertificates] =
-    useState<CertificatesList>([]);
+  const [digitalCertificates, setDigitalCertificates] = useState<CertificatesList>([]);
+  const [physicalCertificates, setPhysicalCertificates] = useState<CertificatesList>([]);
   const [excelFolderPath, setExcelFolderPath] = useState<string | null>(null);
 
   useEffect(() => {
-    // Obtener la ruta de la carpeta del archivo Excel desde sessionStorage
-    const storedExcelFilePath = sessionStorage.getItem("excelFilePath");
-    if (storedExcelFilePath) {
-      // Extraer la carpeta del path
-      const folderPath = storedExcelFilePath.substring(
-        0,
-        storedExcelFilePath.lastIndexOf("\\") + 1
-      );
-      setExcelFolderPath(folderPath);
-      console.log(
-        "Ruta del archivo Excel obtenida de sessionStorage:",
-        folderPath
-      );
-    }
-
-    const obtenerCertificados = async () => {
-      try {
-        const certificates: CertificatesList =
-          await imageDB.newCertificates.toArray();
-
-        const digitalCerts = certificates
-          .filter((cert) => cert.type === "certificadoDigital")
-          .map((cert) => ({ ...cert, certificateUploaded: true }));
-
-        const physicalCerts = certificates
-          .filter((cert) => cert.type === "certificadoFisico")
-          .map((cert) => ({ ...cert, certificateUploaded: true }));
-
-        setDigitalCertificates(digitalCerts);
-        setPhysicalCertificates(physicalCerts);
-      } catch (error) {
-        console.error("Error al obtener los certificados:", error);
-      }
-    };
-
-
+    // Cargar certificados al montar el componente
     obtenerCertificados();
   }, []);
 
-  const exportarPDF = async () => {
-    if (!excelFolderPath) {
-      alert("Por favor, primero seleccione un archivo de Excel.");
+  const obtenerCertificados = async () => {
+    try {
+      const certificates: CertificatesList = await imageDB.newCertificates.toArray();
+
+      const digitalCerts = certificates
+        .filter((cert) => cert.type === "certificadoDigital")
+        .map((cert) => ({ ...cert, certificateUploaded: true }));
+
+      const physicalCerts = certificates
+        .filter((cert) => cert.type === "certificadoFisico")
+        .map((cert) => ({ ...cert, certificateUploaded: true }));
+
+      setDigitalCertificates(digitalCerts);
+      setPhysicalCertificates(physicalCerts);
+
+      // Obtener la ruta de la carpeta del archivo Excel desde sessionStorage
+      const storedExcelFilePath = sessionStorage.getItem("excelFilePath");
+      if (storedExcelFilePath) {
+        const folderPath = storedExcelFilePath.substring(
+          0,
+          storedExcelFilePath.lastIndexOf("\\") + 1
+        );
+        setExcelFolderPath(folderPath);
+        console.log("Ruta del archivo Excel obtenida de sessionStorage:", folderPath);
+      }
+    } catch (error) {
+      console.error("Error al obtener los certificados:", error);
+    }
+  };
+
+  const exportarPDF= () => {
+    const certificates = digitalCertificates.concat(physicalCertificates);
+  
+    if (certificates.length === 0 || !excelFolderPath) {
+      alert("Por favor, primero selecciona un archivo de Excel o no hay certificados para exportar.");
       return;
     }
-
-    const groupedCertificates: { [key: string]: Certificate[] } = {};
-
-    digitalCertificates.concat(physicalCertificates).forEach((certificate) => {
-      if (!groupedCertificates[certificate.ownerName]) {
-        groupedCertificates[certificate.ownerName] = [];
-      }
-      groupedCertificates[certificate.ownerName].push(certificate);
-    });
-
-    try {
-      for (const ownerName in groupedCertificates) {
-        const certificates = groupedCertificates[ownerName];
-        const pdf = new jsPDF("landscape");
-
-        certificates.forEach((certificate, index) => {
-          if (index > 0) {
-            pdf.addPage();
-          }
-          const width = pdf.internal.pageSize.getWidth();
-          const height = pdf.internal.pageSize.getHeight();
-          pdf.addImage(
-            certificate.certificateDataURL,
-            "JPEG",
-            0,
-            0,
-            width,
-            height,
-            "",
-            "SLOW"
-          );
-        });
-
-        const pdfBase64 = pdf.output("datauristring");
-
-        const requestBody = {
-          groupName: ownerName, // Nombre del grupo
-          index: 0, // Índice (puedes cambiar según necesites)
-          pdfBase64: pdfBase64,
-          routeExcel: excelFolderPath,
-        };
-
-        // Enviar los datos a la API
-        const response = await fetch("/../../api/apiPdf", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestBody),
-        });
-
-        if (!response.ok) {
-          throw new Error("Error al enviar los datos a la API.");
-        }
-      }
-
-    
-     
-
-      alert("Datos Guardados Correctamente!");
-      setMostrarConfetti(true);
-    } catch (error) {
-      console.error("Error al enviar los datos a la API:", error);
-      alert("Error al enviar los datos.");
+  
+    // Crear la carpeta "Diplomados" si no existe
+    const folderPath = `${excelFolderPath}/Diplomados`;
+    if (!fs.existsSync(folderPath)) {
+      fs.mkdirSync(folderPath, { recursive: true });
     }
+  
+    // Agrupar certificados por participante
+    const certificadosPorParticipante: { [key: string]: Certificate[] } = {};
+    certificates.forEach((certificate) => {
+      if (!certificadosPorParticipante[certificate.ownerName]) {
+        certificadosPorParticipante[certificate.ownerName] = [];
+      }
+      certificadosPorParticipante[certificate.ownerName].push(certificate);
+    });
+  
+    // Generar y guardar PDF por participante
+    Object.entries(certificadosPorParticipante).forEach(([ownerName, certs]) => {
+      const pdf = new jsPDF("landscape");
+      certs.forEach((cert, index) => {
+        const width = pdf.internal.pageSize.getWidth();
+        const height = pdf.internal.pageSize.getHeight();
+        pdf.addImage(
+          cert.certificateDataURL,
+          "JPEG",
+          0,
+          0,
+          width,
+          height,
+          "",
+          "SLOW"
+        );
+        if (index !== certs.length - 1) {
+          pdf.addPage();
+        }
+      });
+  
+      const primerParticipante = ownerName;
+      const fileName = primerParticipante
+        ? `Diplomado_${primerParticipante}.pdf`
+        : "Diplomado.pdf";
+  
+      const filePath = `${folderPath}/${fileName}`;
+  
+      // Guardar el PDF sin abrir una ventana de diálogo de guardado
+      try {
+        const buffer = pdf.output(); // Obtener el contenido del PDF como un ArrayBuffer
+        fs.writeFileSync(filePath, buffer, { encoding: 'binary' }); // Escribir el contenido en el sistema de archivos
+        console.log(`PDF guardado correctamente en ${filePath}`);
+      } catch (error) {
+        console.error("Error al guardar el PDF:", error);
+      }
+    });
+  
+    alert("Todos los PDFs se han guardado correctamente.");
   };
 
 
@@ -229,8 +213,8 @@ export default function Home() {
         <ul className="steps w-full">
           {/* Envuelve cada <li> en un componente <Link> */}
           <li className="step step-info font-extralight text-xl ">
-            <Link href="/graduates_main/graduate_sayan/graduate/">Insercion de Participantes </Link>
-            <Link href="/graduates_main/graduate_sayan/graduate/graduate_reverso/" passHref legacyBehavior>
+            <Link href="/graduates_main/graduate_sayan/graduate/route/page">Insercion de Participantes </Link>
+            <Link href="/graduates_main/graduate_sayan/graduate/graduate_reverso/page" passHref legacyBehavior>
               <button className=" bg-[#0d617b] text-white btn btn-outline hover:bg-[#b6d900]/70 hover:text-white mt-4">
                 <GrLinkPrevious size={25} />
                 Retroceder
@@ -238,13 +222,13 @@ export default function Home() {
             </Link>
           </li>
           <li className="step step-info font-extralight text-xl ">
-            <Link href="/graduates_main/graduate_sayan/graduate/graduate_reverso/">Anverso del Diplomado</Link>
+            <Link href="/graduates_main/graduate_sayan/graduate/graduate_reverso/page">Anverso del Diplomado</Link>
           </li>
           <li className="step step-info  font-extralight text-xl">
             <Link href="/" passHref>
               Exportar en PDF
             </Link>
-            <Link href="/graduates_main/graduate_sayan/graduate/graduate_export/" passHref legacyBehavior>
+            <Link href="/graduates_main/graduate_sayan/graduate/graduate_export/page" passHref legacyBehavior>
               <button className=" bg-[#0d617b] text-white btn btn-outline hover:bg-[#b6d900]/70 hover:text-white mt-4">
                 Avanzar
                 <GrLinkNext size={25} />

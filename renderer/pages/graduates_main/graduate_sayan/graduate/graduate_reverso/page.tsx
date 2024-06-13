@@ -1,14 +1,14 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
-import ReadExcelParticipants from "@/components/Sayan/ReadExcelParticipants";
-import CertificateGeneratorExcel from "@/components/Sayan/GraduateGeneratorExcelS";
-import CertificateGenerator from "@/components/Sayan/GraduateGeneratorS";
+import ReadExcelParticipants from "../../../../../components/graduates/Sayan/ReadExcelParticipants";
+import CertificateGeneratorExcel from "../../../../../components/graduates/Sayan/GraduateGeneratorExcelS";
+import CertificateGenerator from "../../../../../components/graduates/Sayan/GraduateGeneratorS";
 import Link from "next/link";
 import { IoCloseCircle } from "react-icons/io5";
 import jsPDF from "jspdf";
 import { saveAs } from "file-saver";
-import { NewDataSayan } from "@/components/Sayan/ImageSayanDB";
-import { ImageMagnifier } from "@/components/ImgZoom";
+import { NewDataSayan } from "../../../../../components/graduates/Sayan/ImageSayanDB";
+import { ImageMagnifier } from "../../../../../components/graduates/ImgZoom";
 import { GrLinkNext } from "react-icons/gr";
 import { GrLinkPrevious } from "react-icons/gr";
 import { LuPenSquare } from "react-icons/lu";
@@ -131,11 +131,11 @@ export default function Home() {
         <ul className="steps   w-full">
           {/* Envuelve cada <li> en un componente <Link> */}
           <li className="step step-info font-extralight text-xl ">
-            <Link href="/graduates_main/graduate_sayan/graduate/">
+            <Link href="/graduates_main/graduate_sayan/graduate/route/page">
               Insercion de Participantes{" "}
             </Link>
             <Link
-              href="/graduates_main/graduate_sayan/graduate/"
+              href="/graduates_main/graduate_sayan/graduate/route/page"
               passHref
               legacyBehavior
             >
@@ -146,19 +146,19 @@ export default function Home() {
             </Link>
           </li>
           <li className="step step-info font-extralight text-xl ">
-            <Link href="/graduates_main/graduate_sayan/graduate/graduate_reverso/">
+            <Link href="/graduates_main/graduate_sayan/graduate/graduate_reverso/page">
               Anverso del Diplomado
             </Link>
           </li>
           <li className="step font-extralight text-xl">
             <Link
-              href="/graduates_main/graduate_sayan/graduate/graduate_export/"
+              href="/graduates_main/graduate_sayan/graduate/graduate_export/page"
               passHref
             >
               Exportar en PDF
             </Link>
             <Link
-              href="/graduates_main/graduate_sayan/graduate/graduate_export/"
+              href="/graduates_main/graduate_sayan/graduate/graduate_export/page"
               passHref
               legacyBehavior
             >

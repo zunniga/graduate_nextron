@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useUploader } from "@/components/Sayan/ImageSayanDB";
+import { useUploader } from "../../../../components/graduates/Sayan/ImageSayanDB";
 import { IoIosExit } from "react-icons/io";
 
 export default function Home() {
@@ -17,7 +17,7 @@ export default function Home() {
     // Eliminar la información de inicio de sesión del almacenamiento local
     localStorage.removeItem("isLoggedIn");
     // Redirigir al usuario a la página de inicio de sesión después de cerrar sesión
-    window.location.href = "/graduates_main/graduate_sayan";
+    window.location.href = "/graduates_main/graduate_sayan/routess/page";
   };
 
   const handleCheckboxChange =
@@ -112,7 +112,7 @@ export default function Home() {
           </div>
         ))}
       </div>
-      <Link href="/graduates_main/graduate_sayan/" passHref legacyBehavior>
+      <Link href="/graduates_main/graduate_sayan/routess/page" passHref legacyBehavior>
         <button
           className={`btn text-white bg-[#0d617b] btn-lg mt-8  ${
             !isGuardarButtonEnabled ? "cursor-not-allowed opacity-90" : ""

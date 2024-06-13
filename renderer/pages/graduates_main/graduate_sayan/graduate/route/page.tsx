@@ -1,8 +1,8 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
-import ReadExcelParticipants from "@/components/Sayan/ReadExcelParticipants";
-import CertificateGeneratorExcel from "@/components/Sayan/GraduateGeneratorExcelS";
-import CertificateGenerator from "@/components/Sayan/GraduateGeneratorS";
+import ReadExcelParticipants from "../../../../../components/graduates/Sayan/ReadExcelParticipants";
+import CertificateGeneratorExcel from "../../../../../components/graduates/Sayan/GraduateGeneratorExcelS";
+import CertificateGenerator from "../../../../../components/graduates/Sayan/GraduateGeneratorS";
 import Link from "next/link";
 import { IoCloseCircle } from "react-icons/io5";
 import { RiFileExcel2Fill } from "react-icons/ri";
@@ -14,8 +14,8 @@ import { MdOutlineFileDownloadOff } from "react-icons/md";
 import { TbCertificate } from "react-icons/tb";
 import jsPDF from "jspdf";
 import { saveAs } from "file-saver";
-import { NewDataSayan } from "@/components/Sayan/ImageSayanDB";
-import { ImageMagnifier } from "@/components/ImgZoom";
+import { NewDataSayan } from "../../../../../components/graduates/Sayan/ImageSayanDB";
+import { ImageMagnifier } from "../../../../../components/graduates/ImgZoom";
 import { LuPenSquare } from "react-icons/lu";
 import { IoIosExit } from "react-icons/io";
 
@@ -142,7 +142,7 @@ export default function Home() {
     // Eliminar la información de inicio de sesión del almacenamiento local
     localStorage.removeItem("isLoggedIn");
     // Redirigir al usuario a la página de inicio de sesión después de cerrar sesión
-    window.location.href = "/graduates_main/graduate_sayan";
+    window.location.href = "/graduates_main/graduate_sayan/routess/page";
   };
 
   return (
@@ -159,8 +159,8 @@ export default function Home() {
         <ul className="steps w-full">
           {/* Envuelve cada <li> en un componente <Link> */}
           <li className="step step-info font-extralight text-xl ">
-            <Link href="/graduates_main/graduate_sayan/graduate">Insercion de Participantes </Link>
-            <Link href="/graduates_main/graduate_sayan/graduate" passHref legacyBehavior>
+            <Link href="/graduates_main/graduate_sayan/graduate/route/page">Insercion de Participantes </Link>
+            <Link href="/graduates_main/graduate_sayan/graduate/route/page" passHref legacyBehavior>
               <button className=" bg-[#0d617b] text-white btn btn-outline hover:bg-[#b6d900]/70 hover:text-white mt-4">
                 <GrLinkPrevious size={25} />
                 Retroceder
@@ -168,13 +168,13 @@ export default function Home() {
             </Link>
           </li>
           <li className="step font-extralight text-xl ">
-            <Link href="/graduates_main/graduate_sayan/graduate/graduate_reverso/">Anverso del Diplomado</Link>
+            <Link href="/graduates_main/graduate_sayan/graduate/graduate_reverso/page">Anverso del Diplomado</Link>
           </li>
           <li className="step font-extralight text-xl">
             <Link href="/" passHref>
               Exportar en PDF
             </Link>
-            <Link href="/graduates_main/graduate_sayan/graduate/graduate_reverso/" passHref legacyBehavior>
+            <Link href="/graduates_main/graduate_sayan/graduate/graduate_reverso/page" passHref legacyBehavior>
               <button className=" bg-[#0d617b] text-white btn btn-outline hover:bg-[#b6d900]/70 hover:text-white mt-4">
                 Avanzar
                 <GrLinkNext size={25} />

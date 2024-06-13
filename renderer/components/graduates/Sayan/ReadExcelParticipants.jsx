@@ -84,7 +84,7 @@ const ReadExcelParticipants = () => {
       await participantDB.participants.clear();
       await participantDB.participants.bulkAdd(participantes);
       alert("Datos del Excel guardados correctamente :)");
-      window.location.href = '/graduates_main/graduate_sayan/graduate';
+      window.location.href = '/graduates_main/graduate_sayan/graduate/route/page';
     } catch (error) {
       alert("Error al leer el archivo Excel:", error);
     }

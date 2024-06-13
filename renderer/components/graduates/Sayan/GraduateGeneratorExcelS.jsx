@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { NewDataSayan } from "@/components/Sayan/ImageSayanDB";
-import { participantDB } from "@/components/Sayan/ReadExcelParticipants";
+import { NewDataSayan } from "../../../components/graduates/Sayan/ImageSayanDB";
+import { participantDB } from "../../../components/graduates/Sayan/ReadExcelParticipants";
 import { TbCertificate } from "react-icons/tb";
 
 import { MdDelete } from "react-icons/md";
@@ -483,7 +483,7 @@ for (var i = 0; i < cantidadModulos; i++) {
   return (
     <>
       <button
-        className="w-full btn text-xl font-futura-bkbt  items-center bg-[#006eb0] text-[#ffff] hover:bg-[#ff00d4]/70 mb-5 rounded-lg "
+        className="w-full btn text-xl font-futura-bkbt  items-center bg-[#0d617b] text-[#ffff] hover:bg-[#b6d900]/70 mb-5 rounded-lg "
         onClick={generateCertificates}
         disabled={generatingCertificates || !participantsExist}
       >

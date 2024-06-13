@@ -465,7 +465,7 @@ const CertificateGenerator = () => {
         )
         .then(() => {
           alert("¡Certificado generado exitosamente!");
-          window.location.href = "/graduates_main/graduate_promas/graduate";
+          window.location.href = "/graduates_main/graduate_promas/graduate/route/page";
         })
         .catch((error) => {
           console.error(

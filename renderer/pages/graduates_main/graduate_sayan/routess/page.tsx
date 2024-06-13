@@ -49,7 +49,7 @@ export default function Home({}: HomeProps) {
     // Eliminar la información de inicio de sesión del almacenamiento local
     localStorage.removeItem("isLoggedIn");
     // Redirigir al usuario a la página de inicio de sesión después de cerrar sesión
-    window.location.href = "/";
+    window.location.href = "/route_main/page";
   };
 
   // Verificar si algún checkbox está seleccionado
@@ -64,7 +64,7 @@ export default function Home({}: HomeProps) {
           size={24}
         />
       {/* Botón del icono en la esquina superior derecha */}
-      <Link href="/graduates_main/graduate_sayan/uploadImages">
+      <Link href="/graduates_main/graduate_sayan/uploadImages/page">
         <div className="w-48 bg-[#b6d900]/70 h-12 text-center text-xl text-slate-200 font-futura-bkbt flex justify-center items-center absolute top-0 left-0 m-9 cursor-pointer rounded-xl ml-20">
           Modelo Actual
         </div>
@@ -110,7 +110,7 @@ export default function Home({}: HomeProps) {
           </div>
         ))}
       </div>
-      <Link href="/graduates_main/graduate_sayan/graduate" passHref legacyBehavior>
+      <Link href="/graduates_main/graduate_sayan/graduate/route/page" passHref legacyBehavior>
         <button
           className={`btn bg-[#0d617b] text-slate-200 btn-lg mt-8 ${
             !isAnyCheckboxSelected
